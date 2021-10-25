@@ -1,0 +1,6 @@
+# IDEA
+.idea/
+
+# Kotlin
+.gradle/
+build/
