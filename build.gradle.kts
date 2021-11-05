@@ -29,5 +29,5 @@ tasks.getByName("run", JavaExec::class) {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("stage1.project.MainKt")
 }
