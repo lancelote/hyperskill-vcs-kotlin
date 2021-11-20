@@ -8,8 +8,8 @@ import java.io.File
 fun main() {
     val basedir = File("basedir")
 
-    for (dir in basedir.listFiles()) {
-        for (subdir in dir.listFiles()) {
+    basedir.listFiles()?.forEach { dir ->
+        dir.listFiles()?.forEach { subdir ->
             subdir.list()?.let {
                 if (it.isEmpty()) println(subdir.name)
             }
