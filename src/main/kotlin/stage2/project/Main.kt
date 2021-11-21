@@ -76,6 +76,12 @@ fun add(newFilename: String?) {
     }
 }
 
+fun log() = println(COMMANDS_HELP["log"])
+
+fun commit() = println(COMMANDS_HELP["commit"])
+
+fun checkout() = println(COMMANDS_HELP["checkout"])
+
 fun main(args: Array<String>) {
     val command = args.firstOrNull()
     val argument = args.elementAtOrNull(1)
@@ -84,6 +90,9 @@ fun main(args: Array<String>) {
         "--help" -> printHelp()
         "config" -> config(argument)
         "add" -> add(argument)
+        "log" -> log()
+        "commit" -> commit()
+        "checkout" -> checkout()
         else -> println("'$command' is not a SVCS command.")
     }
 }
