@@ -44,11 +44,15 @@ fun getIndexFile() = getVcsFile(INDEX_FILE_NAME)
 
 fun config(name: String?) {
     val configFile = getConfigFile()
+    val nameInConfig = configFile.readText()
 
-    if (name == null) {
-
+    if (name == null && nameInConfig.isEmpty()) {
+        println("Please, tell me who you are.")
+    } else if (name == null && nameInConfig.isNotEmpty()) {
+        println("The username is $nameInConfig.")
     } else {
-
+        configFile.writeText(name!!)
+        println("The username is $name.")
     }
 }
 
