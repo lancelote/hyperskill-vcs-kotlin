@@ -48,21 +48,25 @@ fun config(name: String?) {
 
     if (name == null && nameInConfig.isEmpty()) {
         println("Please, tell me who you are.")
-    } else if (name == null && nameInConfig.isNotEmpty()) {
+    } else if (name == null) {
         println("The username is $nameInConfig.")
     } else {
-        configFile.writeText(name!!)
+        configFile.writeText(name)
         println("The username is $name.")
     }
 }
 
-fun add(file: String?) {
+fun add(filename: String?) {
     val indexFile = getIndexFile()
+    val filenamesInIndex = indexFile.readLines()
 
-    if (file == null) {
-
+    if (filename == null && filenamesInIndex.isEmpty()) {
+        println("Add a file to the index.")
+    } else if (filename == null) {
+        println("Tracked files:")
+        filenamesInIndex.forEach(::println)
     } else {
-
+        indexFile.appendText("$filename\n")
     }
 }
 
