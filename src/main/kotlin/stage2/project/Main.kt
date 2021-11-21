@@ -61,7 +61,7 @@ fun add(newFilename: String?) {
     val filenamesInIndex = indexFile.readLines()
 
     if (newFilename == null && filenamesInIndex.isEmpty()) {
-        println("Add a file to the index.")
+        println(COMMANDS_HELP["add"])
     } else if (newFilename == null) {
         println("Tracked files:")
         filenamesInIndex.forEach(::println)
