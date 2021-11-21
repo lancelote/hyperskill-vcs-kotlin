@@ -56,17 +56,23 @@ fun config(name: String?) {
     }
 }
 
-fun add(filename: String?) {
+fun add(newFilename: String?) {
     val indexFile = getIndexFile()
     val filenamesInIndex = indexFile.readLines()
 
-    if (filename == null && filenamesInIndex.isEmpty()) {
+    if (newFilename == null && filenamesInIndex.isEmpty()) {
         println("Add a file to the index.")
-    } else if (filename == null) {
+    } else if (newFilename == null) {
         println("Tracked files:")
         filenamesInIndex.forEach(::println)
     } else {
-        indexFile.appendText("$filename\n")
+        val newFile = File(newFilename)
+        if (newFile.exists()) {
+            indexFile.appendText("$newFilename\n")
+            println("The file '$newFilename' is tracked.")
+        } else {
+            println("Can't find '$newFilename'.")
+        }
     }
 }
 
