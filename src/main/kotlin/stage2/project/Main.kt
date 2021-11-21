@@ -87,7 +87,7 @@ fun main(args: Array<String>) {
     val argument = args.elementAtOrNull(1)
 
     when (command) {
-        "--help" -> printHelp()
+        "--help", null -> printHelp()
         "config" -> config(argument)
         "add" -> add(argument)
         "log" -> log()
