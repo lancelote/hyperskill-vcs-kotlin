@@ -30,7 +30,7 @@ fun getVcsDir(): File {
     return vcsDir
 }
 
-fun getVcsFile(fileName: String): File {
+fun getVcsSettingsFile(fileName: String): File {
     val file = getVcsDir().resolve(File(fileName))
     if (!file.exists()) file.createNewFile()
 
@@ -38,9 +38,9 @@ fun getVcsFile(fileName: String): File {
     return file
 }
 
-fun getConfigFile() = getVcsFile(CONFIG_FILE_NAME)
+fun getConfigFile() = getVcsSettingsFile(CONFIG_FILE_NAME)
 
-fun getIndexFile() = getVcsFile(INDEX_FILE_NAME)
+fun getIndexFile() = getVcsSettingsFile(INDEX_FILE_NAME)
 
 fun config(name: String?) {
     val configFile = getConfigFile()
