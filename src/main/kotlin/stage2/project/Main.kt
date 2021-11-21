@@ -1,5 +1,11 @@
 package stage2.project
 
+import java.io.File
+
+const val VCS_DIR_NAME = "vcs"
+const val CONFIG_FILE_NAME = "config.txt"
+const val INDEX_FILE_NAME = "index.txt"
+
 val COMMANDS_HELP = mapOf(
     "config" to "Get and set a username.",
     "add" to "Add a file to the index.",
@@ -16,15 +22,54 @@ fun printHelp() {
     }
 }
 
-fun config() {}
+fun getVcsDir(): File {
+    val vcsDir = File(VCS_DIR_NAME)
+    if (!vcsDir.exists()) vcsDir.mkdir()
 
-fun add() {}
+    assert(vcsDir.isDirectory) { "cannot create '$VCS_DIR_NAME' directory - there's such file" }
+    return vcsDir
+}
+
+fun getVcsFile(fileName: String): File {
+    val file = getVcsDir().resolve(File(fileName))
+    if (!file.exists()) file.createNewFile()
+
+    assert(file.isFile) { "cannot create '$fileName' file - there's such directory in '$VCS_DIR_NAME'"}
+    return file
+}
+
+fun getConfigFile() = getVcsFile(CONFIG_FILE_NAME)
+
+fun getIndexFile() = getVcsFile(INDEX_FILE_NAME)
+
+fun config(name: String?) {
+    val configFile = getConfigFile()
+
+    if (name == null) {
+
+    } else {
+
+    }
+}
+
+fun add(file: String?) {
+    val indexFile = getIndexFile()
+
+    if (file == null) {
+
+    } else {
+
+    }
+}
 
 fun main(args: Array<String>) {
-    when (val command = args.firstOrNull()) {
+    val command = args.firstOrNull()
+    val argument = args.elementAtOrNull(1)
+
+    when (command) {
         "--help" -> printHelp()
-        "config" -> config()
-        "add" -> add()
+        "config" -> config(argument)
+        "add" -> add(argument)
         else -> println("'$command' is not a SVCS command.")
     }
 }
