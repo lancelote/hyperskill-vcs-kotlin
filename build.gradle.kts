@@ -21,7 +21,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "20"
+    kotlinOptions.jvmTarget = "21"
 }
 
 tasks.getByName("run", JavaExec::class) {
