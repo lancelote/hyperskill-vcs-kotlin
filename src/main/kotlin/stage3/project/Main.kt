@@ -24,17 +24,19 @@ fun printHelp() {
     }
 }
 
-fun getDir(name: String): File {
-    val dir = File(name)
+fun getOrCreateDir(dirName: String): File {
+    val workingDir = File(System.getProperty("user.dir"))
+    val dir = workingDir.resolve(dirName)
+
     if (!dir.exists()) dir.mkdir()
 
-    assert(dir.isDirectory) { "cannot create '$name' directory - there's such file" }
+    assert(dir.isDirectory) { "cannot create '${dir.name}' directory - there's such file" }
     return dir
 }
 
-fun getVcsDir() = getDir(VCS_DIR_NAME)
+fun getVcsDir() = getOrCreateDir(VCS_DIR_NAME)
 
-fun getCommitsDir() = getDir(getVcsDir().resolve(COMMITS_DIR_NAME).path)
+fun getCommitsDir() = getOrCreateDir(getVcsDir().resolve(COMMITS_DIR_NAME).path)
 
 fun getVcsSettingsFile(fileName: String): File {
     val file = getVcsDir().resolve(File(fileName))
@@ -96,10 +98,11 @@ fun log() {
 }
 
 fun hasChanges(): Boolean {
-    return false
+    return false  // ToDo: implement
 }
 
 fun saveChanges(message: String?) {
+    // ToDo: implement
 }
 
 fun commit(message: String?) {
