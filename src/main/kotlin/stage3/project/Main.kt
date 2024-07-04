@@ -124,11 +124,13 @@ fun filesToHash(files: List<File>): String {
     return bytesToHex(digest.digest())
 }
 
-fun indexFilesToHash(): String {
+fun getIndexedFiles(): List<File> {
     val indexFile = getIndexFile()
     val indexFileContent = indexFile.readText()
-    return filesToHash(indexFileContent.lines().map { File(it) })
+    return indexFileContent.lines().map { File(it) }
 }
+
+fun indexedFilesToHash() = filesToHash(getIndexedFiles())
 
 fun latestCommitHash(): String {
     val logFile = getLogFile()
@@ -137,12 +139,23 @@ fun latestCommitHash(): String {
     return latestCommit.lines().first().split(" ").last()
 }
 
-fun hasChanges(): Boolean {
-    return latestCommitHash() != indexFilesToHash()
-}
+fun hasChanges() = latestCommitHash() != indexedFilesToHash()
+
+fun copyIndexedFilesTo(commitDir: File) = getIndexedFiles()
+    .forEach {
+        val newFile = commitDir.resolve(it.name)
+        it.copyTo(newFile)
+    }
 
 fun saveChanges(message: String?) {
-    // ToDo: implement
+    val hash = indexedFilesToHash()
+    val author = getConfigFile().readText()
+    val commit = "commit $hash\nAuthor: $author\n$message\n"
+    getLogFile().appendText(commit)
+
+    val commitsDir = getCommitsDir()
+    val newCommitDir = getOrCreateDir(commitsDir.resolve(hash).path)
+    copyIndexedFilesTo(newCommitDir)
 }
 
 fun commit(message: String?) {
