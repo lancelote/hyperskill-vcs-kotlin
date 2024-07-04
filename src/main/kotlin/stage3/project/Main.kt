@@ -138,7 +138,7 @@ fun latestCommitHash(): String {
 }
 
 fun hasChanges(): Boolean {
-    return false  // ToDo: implement
+    return latestCommitHash() != indexFilesToHash()
 }
 
 fun saveChanges(message: String?) {
