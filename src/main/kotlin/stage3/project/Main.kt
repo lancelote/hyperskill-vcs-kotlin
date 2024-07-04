@@ -85,12 +85,29 @@ fun add(newFilename: String?) {
 }
 
 fun log() {
-    println("No commits yet.")
+    val logFile = getLogFile()
+    val logFileContent = logFile.readText()
+
+    if (logFileContent.isEmpty()) {
+        println("No commits yet.")
+    } else {
+        println(logFileContent)
+    }
+}
+
+fun hasChanges(): Boolean {
+    return false
+}
+
+fun saveChanges(message: String?) {
 }
 
 fun commit(message: String?) {
     if (message == null) {
         println("Message was not passed.")
+    } else if (hasChanges()) {
+        saveChanges(message)
+        println("Changes are committed.")
     } else {
         println("Nothing to commit.")
     }
@@ -112,3 +129,5 @@ fun main(args: Array<String>) {
         else -> println("'$command' is not a SVCS command.")
     }
 }
+
+// ToDo: introduce CI
