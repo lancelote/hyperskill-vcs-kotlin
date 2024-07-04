@@ -1,6 +1,8 @@
 package stage3.project
 
 import java.io.File
+import java.io.FileInputStream
+import java.security.MessageDigest
 
 const val VCS_DIR_NAME = "vcs"
 const val COMMITS_DIR_NAME = "commits"
@@ -95,6 +97,37 @@ fun log() {
     } else {
         println(logFileContent)
     }
+}
+
+fun bytesToHex(bytes: ByteArray): String {
+    val sb = StringBuilder()
+    for (byte in bytes) {
+        sb.append(String.format("%02x", byte))
+    }
+    return sb.toString()
+}
+
+fun filesToHash(files: List<File>): String {
+    val buffer = ByteArray(1024)
+    val digest = MessageDigest.getInstance("SHA-256")
+
+    files.forEach { file ->
+        FileInputStream(file).use { fis ->
+            var bytesRead = fis.read(buffer)
+            while (bytesRead != -1) {
+                digest.update(buffer, 0, bytesRead)
+                bytesRead = fis.read(buffer)
+            }
+        }
+    }
+
+    return bytesToHex(digest.digest())
+}
+
+fun indexFilesToHash(): String {
+    val indexFile = getIndexFile()
+    val indexFileContent = indexFile.readText()
+    return filesToHash(indexFileContent.lines().map { File(it) })
 }
 
 fun hasChanges(): Boolean {
