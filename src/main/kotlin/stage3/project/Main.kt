@@ -130,6 +130,13 @@ fun indexFilesToHash(): String {
     return filesToHash(indexFileContent.lines().map { File(it) })
 }
 
+fun latestCommitHash(): String {
+    val logFile = getLogFile()
+    val logFileContent = logFile.readText()
+    val latestCommit = logFileContent.split("\n\n").last()
+    return latestCommit.lines().first().split(" ").last()
+}
+
 fun hasChanges(): Boolean {
     return false  // ToDo: implement
 }
