@@ -107,7 +107,9 @@ fun bytesToHex(bytes: ByteArray): String {
     return sb.toString()
 }
 
-fun filesToHash(files: List<File>): String {
+fun filesToHash(files: List<File>): String? {
+    if (files.isEmpty()) return null
+
     val buffer = ByteArray(1024)
     val digest = MessageDigest.getInstance("SHA-256")
 
@@ -127,19 +129,29 @@ fun filesToHash(files: List<File>): String {
 fun getIndexedFiles(): List<File> {
     val indexFile = getIndexFile()
     val indexFileContent = indexFile.readText()
-    return indexFileContent.lines().map { File(it) }
+    return indexFileContent.lines().filter { it.isNotEmpty() } .map { File(it) }
 }
 
-fun indexedFilesToHash() = filesToHash(getIndexedFiles())
+fun getIndexedFilesHash() = filesToHash(getIndexedFiles())
 
-fun latestCommitHash(): String {
+fun getLatestCommitHash(): String? {
     val logFile = getLogFile()
     val logFileContent = logFile.readText()
+
+    if (logFileContent.isEmpty()) return null
+
     val latestCommit = logFileContent.split("\n\n").last()
     return latestCommit.lines().first().split(" ").last()
 }
 
-fun hasChanges() = latestCommitHash() != indexedFilesToHash()
+fun hasChanges(): Boolean {
+    val latestCommitHash = getLatestCommitHash()
+    val indexedFilesHash = getIndexedFilesHash() ?: return false
+
+    if (latestCommitHash == null) return true
+
+    return latestCommitHash != indexedFilesHash
+}
 
 fun copyIndexedFilesTo(commitDir: File) = getIndexedFiles()
     .forEach {
@@ -148,7 +160,7 @@ fun copyIndexedFilesTo(commitDir: File) = getIndexedFiles()
     }
 
 fun saveChanges(message: String?) {
-    val hash = indexedFilesToHash()
+    val hash = getIndexedFilesHash()!!
     val author = getConfigFile().readText()
     val commit = "commit $hash\nAuthor: $author\n$message\n"
     getLogFile().appendText(commit)
