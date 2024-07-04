@@ -84,9 +84,17 @@ fun add(newFilename: String?) {
     }
 }
 
-fun log() = println(COMMANDS_HELP["log"])
+fun log() {
+    println("No commits yet.")
+}
 
-fun commit() = println(COMMANDS_HELP["commit"])
+fun commit(message: String?) {
+    if (message == null) {
+        println("Message was not passed.")
+    } else {
+        println("Nothing to commit.")
+    }
+}
 
 fun checkout() = println(COMMANDS_HELP["checkout"])
 
@@ -99,7 +107,7 @@ fun main(args: Array<String>) {
         "config" -> config(argument)
         "add" -> add(argument)
         "log" -> log()
-        "commit" -> commit()
+        "commit" -> commit(argument)
         "checkout" -> checkout()
         else -> println("'$command' is not a SVCS command.")
     }
