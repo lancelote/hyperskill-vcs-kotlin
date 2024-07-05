@@ -167,8 +167,13 @@ fun copyIndexedFilesTo(commitDir: File) = getIndexedFiles()
 fun saveChanges(message: String?) {
     val hash = getIndexedFilesHash()!!
     val author = getConfigFile().readText()
-    val commit = "commit $hash\nAuthor: $author\n$message\n"
-    getLogFile().appendText(commit)
+    val commit = "commit $hash\nAuthor: $author\n$message\n\n"
+
+    val logFile = getLogFile()
+    val oldLog = logFile.readText()
+
+    logFile.writeText(commit)
+    logFile.appendText(oldLog)
 
     val commitsDir = getCommitsDir()
     val newCommitDir = getOrCreateDir(commitsDir.resolve(hash).path)
