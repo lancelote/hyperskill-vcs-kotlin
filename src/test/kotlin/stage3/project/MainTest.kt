@@ -11,6 +11,8 @@ import java.io.File
 import java.io.PrintStream
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.createFile
+import kotlin.io.path.writeText
 
 class StdOutCaptureTest {
     private lateinit var byteArrayOutputStream: ByteArrayOutputStream
@@ -46,19 +48,19 @@ class StdOutCaptureTest {
 
     @Test
     fun testNoCommits() {
-        main(arrayOf("log"))
+        runCommand("log")
         assertOutputEquals("No commits yet.")
     }
 
     @Test
     fun testNoCommitMessage() {
-        main(arrayOf("commit"))
+        runCommand("commit")
         assertOutputEquals("Message was not passed.")
     }
 
     @Test
     fun testNothingToCommit() {
-        main(arrayOf("commit", "some message"))
+        runCommand("commit", "some message")
         assertOutputEquals("Nothing to commit.")
     }
 
@@ -74,9 +76,67 @@ class StdOutCaptureTest {
         assertEquals(expSHA256, filesToHash(listOf(tempFile1, tempFile2)))
     }
 
+    @Test
+    fun hyperskillExample() {
+        val file1 = tempDir.resolve("file1.txt").createFile()
+        file1.writeText("hello world1")
+
+        val file2 = tempDir.resolve("file2.txt").createFile()
+        file2.writeText("hello world2")
+
+        tempDir.resolve("untracked_file.txt").createFile()
+
+        runCommand("config Pavel")
+        assertOutputEquals("The username is Pavel.")
+
+        runCommand("log")
+        assertOutputEquals("No commits yet.")
+
+        runCommand("add", "file1.txt")
+        assertOutputEquals("The file 'file1.txt' is tracked.")
+
+        runCommand("commit", "Added several lines of code to the file1.txt")
+        assertOutputEquals("Changes are committed.")
+
+        runCommand("log")
+        assertOutputEquals("""
+            commit 0b4f05fcd3e1dcc47f58fed4bb189196f99da89a
+            Author: Pavel
+            Added several lines of code to the file1.txt
+        """.trimIndent())
+
+        runCommand("add", "file2.txt")
+        assertOutputEquals("The file 'file2.txt' is tracked.")
+
+        runCommand("commit", "Changed several lines of code in the file2.txt")
+        assertOutputEquals("Changes are committed.")
+
+        runCommand("log")
+        assertOutputEquals("""
+            commit 2853da19f31cfc086cd5c40915253cb28d5eb01c
+            Author: Pavel
+            Changed several lines of code in the file2.txt
+
+            commit 0b4f05fcd3e1dcc47f58fed4bb189196f99da89a
+            Author: Pavel
+            Added several lines of code to the file1.txt
+        """.trimIndent())
+
+        runCommand("commit", "Files were not changed")
+        assertOutputEquals("Nothing to commit.")
+
+        runCommand("commit")
+        assertOutputEquals("Message was not passed.")
+    }
+
+    private fun runCommand(vararg command: String) {
+        main(arrayOf(*command))
+    }
+
     private fun assertOutputEquals(expected: String) {
         printStream.flush()
         val capturedOutput = byteArrayOutputStream.toString().trim()
         assertEquals(expected, capturedOutput)
+        byteArrayOutputStream.reset()
     }
 }
