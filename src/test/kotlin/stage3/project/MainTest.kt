@@ -86,7 +86,7 @@ class StdOutCaptureTest {
 
         tempDir.resolve("untracked_file.txt").createFile()
 
-        runCommand("config Pavel")
+        runCommand("config", "Pavel")
         assertOutputEquals("The username is Pavel.")
 
         runCommand("log")
