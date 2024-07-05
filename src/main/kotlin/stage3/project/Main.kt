@@ -26,9 +26,14 @@ fun printHelp() {
     }
 }
 
+fun getFile(fileName: String): File {
+    val workDir = File(System.getProperty("user.dir"))
+    return workDir.resolve(fileName)
+}
+
 fun getOrCreateDir(dirName: String): File {
-    val workingDir = File(System.getProperty("user.dir"))
-    val dir = workingDir.resolve(dirName)
+    val workDir = File(System.getProperty("user.dir"))
+    val dir = workDir.resolve(dirName)
 
     if (!dir.exists()) dir.mkdir()
 
@@ -78,7 +83,7 @@ fun add(newFilename: String?) {
         println("Tracked files:")
         filenamesInIndex.forEach(::println)
     } else {
-        val newFile = File(newFilename)
+        val newFile = getFile(newFilename)
         if (newFile.exists()) {
             indexFile.appendText("$newFilename\n")
             println("The file '$newFilename' is tracked.")
