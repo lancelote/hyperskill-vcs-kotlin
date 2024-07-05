@@ -134,7 +134,7 @@ fun filesToHash(files: List<File>): String? {
 fun getIndexedFiles(): List<File> {
     val indexFile = getIndexFile()
     val indexFileContent = indexFile.readText()
-    return indexFileContent.lines().filter { it.isNotEmpty() } .map { File(it) }
+    return indexFileContent.lines().filter { it.isNotEmpty() } .map { getFile(it) }
 }
 
 fun getIndexedFilesHash() = filesToHash(getIndexedFiles())
