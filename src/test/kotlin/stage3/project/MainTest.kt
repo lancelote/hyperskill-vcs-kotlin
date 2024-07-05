@@ -100,7 +100,7 @@ class StdOutCaptureTest {
 
         runCommand("log")
         assertOutputEquals("""
-            commit 0b4f05fcd3e1dcc47f58fed4bb189196f99da89a
+            commit 916e14036f2d86a479ab16a3f2cffaf73a5419d12576497cc2d837fb423571a5
             Author: Pavel
             Added several lines of code to the file1.txt
         """.trimIndent())
@@ -113,11 +113,11 @@ class StdOutCaptureTest {
 
         runCommand("log")
         assertOutputEquals("""
-            commit 2853da19f31cfc086cd5c40915253cb28d5eb01c
+            commit 51f953dfd60527c26071af3d83947815b69b5801a163eeeae34d71c97d2320d4
             Author: Pavel
             Changed several lines of code in the file2.txt
 
-            commit 0b4f05fcd3e1dcc47f58fed4bb189196f99da89a
+            commit 916e14036f2d86a479ab16a3f2cffaf73a5419d12576497cc2d837fb423571a5
             Author: Pavel
             Added several lines of code to the file1.txt
         """.trimIndent())
