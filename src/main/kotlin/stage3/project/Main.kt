@@ -145,7 +145,7 @@ fun getLatestCommitHash(): String? {
 
     if (logFileContent.isEmpty()) return null
 
-    val latestCommit = logFileContent.split("\n\n").last()
+    val latestCommit = logFileContent.split("\n\n").first()
     return latestCommit.lines().first().split(" ").last()
 }
 
