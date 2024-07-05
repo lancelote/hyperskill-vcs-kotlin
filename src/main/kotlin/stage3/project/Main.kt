@@ -207,5 +207,3 @@ fun main(args: Array<String>) {
         else -> println("'$command' is not a SVCS command.")
     }
 }
-
-// ToDo: introduce CI
