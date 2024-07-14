@@ -2,7 +2,10 @@ package stage4.project
 
 import java.io.File
 import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
+import kotlin.io.path.listDirectoryEntries
 
 const val VCS_DIR_NAME = "vcs"
 const val COMMITS_DIR_NAME = "commits"
@@ -26,14 +29,12 @@ fun printHelp() {
     }
 }
 
-fun getFile(fileName: String): File {
-    val workDir = File(System.getProperty("user.dir"))
-    return workDir.resolve(fileName)
-}
+fun getWorkDir() = File(System.getProperty("user.dir"))
+
+fun getFile(fileName: String) = getWorkDir().resolve(fileName)
 
 fun getOrCreateDir(dirName: String): File {
-    val workDir = File(System.getProperty("user.dir"))
-    val dir = workDir.resolve(dirName)
+    val dir = getWorkDir().resolve(dirName)
 
     if (!dir.exists()) dir.mkdir()
 
@@ -191,7 +192,33 @@ fun commit(message: String?) {
     }
 }
 
-fun checkout() = println(COMMANDS_HELP["checkout"])
+fun getCommitSet(): Set<String> {
+    val commitsDit = getCommitsDir()
+    return commitsDit.listFiles()!!.map { it.name }.toSet()
+}
+
+fun getCommitDir(commitId: String): File {
+    val commitsDir = getCommitsDir()
+    return commitsDir.resolve(commitId)
+}
+
+fun checkout(commitId: String?) {
+    when (commitId) {
+        null -> println("Commit id was not passed.")
+        in getCommitSet() -> {
+            val sourcePath = getCommitDir(commitId)
+            val targetPath = getWorkDir()
+
+            sourcePath.toPath().listDirectoryEntries().forEach {
+                val newPath = targetPath.toPath().resolve(sourcePath.toPath().relativize(it))
+                Files.copy(it, newPath, StandardCopyOption.REPLACE_EXISTING)
+            }
+
+            println("Switched to commit $commitId.")
+        }
+        else -> println("Commit does not exist.")
+    }
+}
 
 fun main(args: Array<String>) {
     val command = args.firstOrNull()
@@ -203,7 +230,7 @@ fun main(args: Array<String>) {
         "add" -> add(argument)
         "log" -> log()
         "commit" -> commit(argument)
-        "checkout" -> checkout()
+        "checkout" -> checkout(argument)
         else -> println("'$command' is not a SVCS command.")
     }
 }

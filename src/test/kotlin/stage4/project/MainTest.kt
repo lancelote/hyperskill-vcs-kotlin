@@ -127,6 +127,15 @@ class StdOutCaptureTest {
 
         runCommand("commit")
         assertOutputEquals("Message was not passed.")
+
+        runCommand("checkout", "916e14036f2d86a479ab16a3f2cffaf73a5419d12576497cc2d837fb423571a5")
+        assertOutputEquals("Switched to commit 916e14036f2d86a479ab16a3f2cffaf73a5419d12576497cc2d837fb423571a5.")
+
+        runCommand("checkout", "fb92cc1be7f60c8d9acf74cbd4a67841d8d2e844")
+        assertOutputEquals("Commit does not exist.")
+
+        runCommand("checkout")
+        assertOutputEquals("Commit id was not passed.")
     }
 
     private fun runCommand(vararg command: String) {
