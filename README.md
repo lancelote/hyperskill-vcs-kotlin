@@ -7,4 +7,4 @@
 - [x] [Stage 1: Help page](src/main/kotlin/stage1/project/Main.kt)
 - [x] [Stage 2: Add & config](src/main/kotlin/stage2/project/Main.kt)
 - [x] [Stage 3: Log & commit](src/main/kotlin/stage3/project/Main.kt)
-- [ ] Stage 4: Checkout time
+- [ ] [Stage 4: Checkout time](src/main/kotlin/stage4/project/Main.kt)
